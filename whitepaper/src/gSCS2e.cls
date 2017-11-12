@@ -45,7 +45,7 @@
 \@twosidetrue\@mparswitchtrue
 \@twocolumnfalse
 %
-\def\jobtag{Journal of Statistical Computation and Simulation}
+\def\jobtag{}
 \newdimen\draftrule
 \draftrule=0pt
 \newif\ifdraft
@@ -963,21 +963,7 @@
 \gdef\@jyear{20XX}
 \def\doi#1{\gdef\@doi{#1}}
 \gdef\@doi{}
-%
-\def\ps@plain{%
-     \let\@mkboth\@gobbletwo
-     \let\@oddfoot\@evenfoot
-     \def\@oddhead{\hbox to \textwidth{{\small\begin{tabular}[t]{@{}l@{}}
-                                                                                     \\ %[14.9pt]
-                          {To appear in the \itshape \@jname} \\Vol. \@jvol, No. \@jnum,
-                          \ifx\@jmonth\empty\else\@jmonth\ \fi\@jyear,  \thepage--\@endpage\\
-                          \@doi\\
-                          \end{tabular}}%
-                          \hfill%
-                          }}%
-     \let\@evenhead\@oddhead
-}
-%
+
 \def\markboth#1#2{%
   \begingroup
    \let\label\relax \let\index\relax \let\glossary\relax
