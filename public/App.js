@@ -1,90 +1,94 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
+import getWeb3 from './utils/getWeb3'
 
-// import ReactNodeGraph from 'react-node-graph'; 
+import './css/oswald.css'
+import './css/open-sans.css'
+import './css/pure-min.css'
+import './App.css'
 
-import ReactNodeGraph from '../src/';
-
-var exampleGraph = {
-  "nodes":[
-    {"nid":1,"type":"WebGLRenderer","x":1479,"y":351,"fields":{"in":[{"name":"width"},{"name":"height"},{"name":"scene"},{"name":"camera"},{"name":"bg_color"},{"name":"postfx"},{"name":"shadowCameraNear"},{"name":"shadowCameraFar"},{"name":"shadowMapWidth"},{"name":"shadowMapHeight"},{"name":"shadowMapEnabled"},{"name":"shadowMapSoft"}],"out":[]}},
-    {"nid":14,"type":"Camera","x":549,"y":478,"fields":{"in":[{"name":"fov"},{"name":"aspect"},{"name":"near"},{"name":"far"},{"name":"position"},{"name":"target"},{"name":"useTarget"}],"out":[{"name":"out"}]}},
-    {"nid":23,"type":"Scene","x":1216,"y":217,"fields":{"in":[{"name":"children"},{"name":"position"},{"name":"rotation"},{"name":"scale"},{"name":"doubleSided"},{"name":"visible"},{"name":"castShadow"},{"name":"receiveShadow"}],"out":[{"name":"out"}]}},
-    {"nid":35,"type":"Merge","x":948,"y":217,"fields":{"in":[{"name":"in0"},{"name":"in1"},{"name":"in2"},{"name":"in3"},{"name":"in4"},{"name":"in5"}],"out":[{"name":"out"}]}},
-    {"nid":45,"type":"Color","x":950,"y":484,"fields":{"in":[{"name":"rgb"},{"name":"r"},{"name":"g"},{"name":"b"}],"out":[{"name":"rgb"},{"name":"r"},{"name":"g"},{"name":"b"}]}},
-    {"nid":55,"type":"Vector3","x":279,"y":503,"fields":{"in":[{"name":"xyz"},{"name":"x"},{"name":"y"},{"name":"z"}],"out":[{"name":"xyz"},{"name":"x"},{"name":"y"},{"name":"z"}]}},
-    {"nid":65,"type":"ThreeMesh","x":707,"y":192,"fields":{"in":[{"name":"children"},{"name":"position"},{"name":"rotation"},{"name":"scale"},{"name":"doubleSided"},{"name":"visible"},{"name":"castShadow"},{"name":"receiveShadow"},{"name":"geometry"},{"name":"material"},{"name":"overdraw"}],"out":[{"name":"out"}]}},
-    {"nid":79,"type":"Timer","x":89,"y":82,"fields":{"in":[{"name":"reset"},{"name":"pause"},{"name":"max"}],"out":[{"name":"out"}]}},
-    {"nid":84,"type":"MathMult","x":284,"y":82,"fields":{"in":[{"name":"in"},{"name":"factor"}],"out":[{"name":"out"}]}},
-    {"nid":89,"type":"Vector3","x":486,"y":188,"fields":{"in":[{"name":"xyz"},{"name":"x"},{"name":"y"},{"name":"z"}],"out":[{"name":"xyz"},{"name":"x"},{"name":"y"},{"name":"z"}]}}
-  ],
-  "connections":[
-    {"from_node":23,"from":"out","to_node":1,"to":"scene"},
-    {"from_node":14,"from":"out","to_node":1,"to":"camera"},
-    {"from_node":14,"from":"out","to_node":35,"to":"in5"},
-    {"from_node":35,"from":"out","to_node":23,"to":"children"},
-    {"from_node":45,"from":"rgb","to_node":1,"to":"bg_color"},
-    {"from_node":55,"from":"xyz","to_node":14,"to":"position"},
-    {"from_node":65,"from":"out","to_node":35,"to":"in0"},
-    {"from_node":79,"from":"out","to_node":84,"to":"in"},
-    {"from_node":89,"from":"xyz","to_node":65,"to":"rotation"},
-    {"from_node":84,"from":"out","to_node":89,"to":"y"}
-  ]
-};
-
-export default class App extends Component {
-  
+class App extends Component {
   constructor(props) {
-    super(props);
-    this.state = exampleGraph;
+    super(props)
+
+    this.state = {
+      storageValue: 0,
+      web3: null
+    }
   }
 
-  onNewConnector(fromNode,fromPin,toNode,toPin) {
-    let connections = [...this.state.connections, {
-      from_node : fromNode,
-      from : fromPin,
-      to_node : toNode,
-      to : toPin
-    }]
+  componentWillMount() {
+    // Get network provider and web3 instance.
+    // See utils/getWeb3 for more info.
 
-    this.setState({connections: connections})
-  }
+    getWeb3
+    .then(results => {
+      this.setState({
+        web3: results.web3
+      })
 
-  onRemoveConnector(connector) {
-    let connections = [...this.state.connections]
-    connections = connections.filter((connection) => {
-      return connection != connector
+      // Instantiate contract once web3 provided.
+      this.instantiateContract()
     })
-
-    this.setState({connections: connections})
+    .catch(() => {
+      console.log('Error finding web3.')
+    })
   }
 
-  onNodeMove(nid, pos) { 
-    console.log('end move : ' + nid, pos)
-  }
+  instantiateContract() {
+    /*
+     * SMART CONTRACT EXAMPLE
+     *
+     * Normally these functions would be called in the context of a
+     * state management library, but for convenience I've placed them here.
+     */
 
-  onNodeStartMove(nid) { 
-    console.log('start move : ' + nid)
-  }
+    const contract = require('truffle-contract')
+    const simpleStorage = contract(SimpleStorageContract)
+    simpleStorage.setProvider(this.state.web3.currentProvider)
 
-  handleNodeSelect(nid) {
-    console.log('node selected : ' + nid)
-  }
+    // Declaring this for later so we can chain functions on SimpleStorage.
+    var simpleStorageInstance
 
-  handleNodeDeselect(nid) {
-    console.log('node deselected : ' + nid)
+    // Get accounts.
+    this.state.web3.eth.getAccounts((error, accounts) => {
+      simpleStorage.deployed().then((instance) => {
+        simpleStorageInstance = instance
+
+        // Stores a given value, 5 by default.
+        return simpleStorageInstance.set(42, {from: accounts[0]})
+      }).then((result) => {
+        // Get the value from the contract to prove it worked.
+        return simpleStorageInstance.get.call(accounts[0])
+      }).then((result) => {
+        // Update state with the result.
+        return this.setState({ storageValue: result.c[0] })
+      })
+    })
   }
 
   render() {
-      return (
-          <ReactNodeGraph 
-            data={this.state} 
-            onNodeMove={(nid, pos)=>this.onNodeMove(nid, pos)}
-            onNodeStartMove={(nid)=>this.onNodeStartMove(nid)}
-            onNewConnector={(n1,o,n2,i)=>this.onNewConnector(n1,o,n2,i)}
-            onRemoveConnector={(connector)=>this.onRemoveConnector(connector)}
-            onNodeSelect={(nid) => {this.handleNodeSelect(nid)}}
-            onNodeDeselect={(nid) => {this.handleNodeDeselect(nid)}}
-          />
-      );      
+    return (
+      <div className="App">
+        <nav className="navbar pure-menu pure-menu-horizontal">
+            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
+        </nav>
+
+        <main className="container">
+          <div className="pure-g">
+            <div className="pure-u-1-1">
+              <h1>Nice to Go!</h1>
+              <p>Your Truffle Box is installed and ready.</p>
+              <h2>Smart Contract Example</h2>
+              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
+              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
+              <p>The stored value is: {this.state.storageValue}</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
   }
 }
+
+export default App
