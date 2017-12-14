@@ -4,12 +4,12 @@ import G2 from 'g2';
 G2.track(false);
 
 const colors = [
-  '#8543E0', '#F04864', '#FACC14', '#1890FF', '#13C2C2', '#2FC25B', '#fa8c16', '#a0d911',
+  '#8543E0', '#F04864', '#FACC14', '#00bbff', '#66ffbb', '#2FC25B', '#fa8c16', '#a0d911',
 ];
 
 const config = {
   ...G2.Theme,
-  defaultColor: '#1089ff',
+  defaultColor: '#00bbff',
   colors: {
     default: colors,
     intervalStack: colors,

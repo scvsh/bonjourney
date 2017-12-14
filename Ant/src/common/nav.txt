@@ -12,7 +12,7 @@ export const getNavData = app => [
   {
     component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     layout: 'BasicLayout',
-    name: 'homepage', // for breadcrumb
+    name: '首页', // for breadcrumb
     path: '/',
     children: [
       {
@@ -21,39 +21,34 @@ export const getNavData = app => [
         path: 'dashboard',
         children: [
           {
-            name: 'HUDDashboard',
-            path: 'huddashboard',
-            component: dynamicWrapper(app, ['list'], () => import('../routes/HUD/HUDDashboard')),
-          },
-          {
-            name: 'HUDProject',
-            path: 'hudproject',
-            component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/HUD/HUDProject')),
-          },
-          {
-            name: 'Analysis page',
+            name: '分析页',
             path: 'analysis',
             component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
           },
           {
-            name: 'Monitor page',
+            name: '监控页',
             path: 'monitor',
             component: dynamicWrapper(app, ['monitor'], () => import('../routes/Dashboard/Monitor')),
+          },
+          {
+            name: '工作台',
+            path: 'workplace',
+            component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Dashboard/Workplace')),
           },
         ],
       },
       {
-        name: 'Form page',
+        name: '表单页',
         path: 'form',
         icon: 'form',
         children: [
           {
-            name: 'Basic form',
+            name: '基础表单',
             path: 'basic-form',
             component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
           },
           {
-            name: 'Step form',
+            name: '分步表单',
             path: 'step-form',
             component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
             children: [
@@ -68,85 +63,85 @@ export const getNavData = app => [
             ],
           },
           {
-            name: 'Advanced form',
+            name: '高级表单',
             path: 'advanced-form',
             component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
           },
         ],
       },
       {
-        name: 'List',
+        name: '列表页',
         path: 'list',
         icon: 'table',
         children: [
           {
-            name: 'Table list',
+            name: '查询表格',
             path: 'table-list',
             component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
           },
           {
-            name: 'Basic list',
+            name: '标准列表',
             path: 'basic-list',
             component: dynamicWrapper(app, ['list'], () => import('../routes/List/BasicList')),
           },
           {
-            name: 'Card list',
+            name: '卡片列表',
             path: 'card-list',
             component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
           },
           {
-            name: 'Cover card list',
+            name: '搜索列表（项目）',
             path: 'cover-card-list',
             component: dynamicWrapper(app, ['list'], () => import('../routes/List/CoverCardList')),
           },
           {
-            name: 'Filter card list',
+            name: '搜索列表（应用）',
             path: 'filter-card-list',
             component: dynamicWrapper(app, ['list'], () => import('../routes/List/FilterCardList')),
           },
           {
-            name: 'Search',
+            name: '搜索列表（文章）',
             path: 'search',
             component: dynamicWrapper(app, ['list'], () => import('../routes/List/SearchList')),
           },
         ],
       },
       {
-        name: 'Profile',
+        name: '详情页',
         path: 'profile',
         icon: 'profile',
         children: [
           {
-            name: 'Basic',
+            name: '基础详情页',
             path: 'basic',
             component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
           },
           {
-            name: 'Advanced',
+            name: '高级详情页',
             path: 'advanced',
             component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/AdvancedProfile')),
           },
         ],
       },
       {
-        name: 'Result',
+        name: '结果',
         path: 'result',
         icon: 'check-circle-o',
         children: [
           {
-            name: 'Success',
+            name: '成功',
             path: 'success',
             component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
           },
           {
-            name: 'Fail',
+            name: '失败',
             path: 'fail',
             component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
           },
         ],
       },
       {
-        name: 'Warning',
+        name: '异常',
         path: 'exception',
         icon: 'warning',
         children: [
@@ -175,22 +170,22 @@ export const getNavData = app => [
     layout: 'UserLayout',
     children: [
       {
-        name: 'User',
+        name: '帐户',
         icon: 'user',
         path: 'user',
         children: [
           {
-            name: 'Login',
+            name: '登录',
             path: 'login',
             component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
           },
           {
-            name: 'Register',
+            name: '注册',
             path: 'register',
             component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
           },
           {
-            name: 'Register result',
+            name: '注册结果',
             path: 'register-result',
             component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
           },
@@ -202,7 +197,7 @@ export const getNavData = app => [
     component: dynamicWrapper(app, [], () => import('../layouts/BlankLayout')),
     layout: 'BlankLayout',
     children: {
-      name: 'Working with Documents',
+      name: '使用文档',
       path: 'http://pro.ant.design/docs/getting-started',
       target: '_blank',
       icon: 'book',
