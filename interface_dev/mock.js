@@ -16,6 +16,7 @@ project = {
 task = { // Core system element, cannot be divided
     id: null,
     title: null, // Task title
+    brief: null,
     startTime: null,
     finishTime: null, // Calculated from priceDecay
     tags: [], // Task profile 
@@ -27,6 +28,6 @@ task = { // Core system element, cannot be divided
     outputs: [],
     player: null, // Person responsible
     project: null, // Parent project
-
-
 }
+
+
